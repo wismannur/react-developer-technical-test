@@ -5,9 +5,11 @@ import { getGames, getJackpots } from "../services/front-end-test";
 import { GameData, JackpotData } from "../services/front-end-test/types";
 import useFetch from "../hooks/useFetch";
 import { callFunctionWithInterval } from "../utils/misc";
+import LoadingPage from "../components/LoadingPage";
 
 export const GamesProvider = ({ children }: { children: ReactNode }) => {
-  const { data: gameItems } = useFetch<GameData[]>(getGames);
+  const { data: gameItems, loading: isLoadingGamesData } =
+    useFetch<GameData[]>(getGames);
   const { data: jackpotItems, refetch: refetchJackpot } =
     useFetch<JackpotData[]>(getJackpots);
 
@@ -21,7 +23,7 @@ export const GamesProvider = ({ children }: { children: ReactNode }) => {
     <GamesContext.Provider
       value={{ setCategory, currentCategory, gameItems, jackpotItems }}
     >
-      {children}
+      {isLoadingGamesData ? <LoadingPage /> : children}
     </GamesContext.Provider>
   );
 };
